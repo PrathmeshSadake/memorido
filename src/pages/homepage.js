@@ -4,8 +4,8 @@ import Form from '../components/Form/Form';
 
 const HomePage = () => {
   return (
-    <div>
-      <Form />
+    <div className='py-10'>
+      <Posts />
     </div>
   );
 };

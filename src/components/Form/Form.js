@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react';
 import FileBase from 'react-file-base64';
 import { useDispatch } from 'react-redux';
-import { createPost } from '../../redux/actions/posts';
+import { useParams } from 'react-router-dom';
+import { createPost, updatePost } from '../../redux/actions/posts';
 
 function Form() {
-  useEffect(() => {});
   const dispatch = useDispatch();
+  const { id: currentPostId } = useParams();
+
+  if (currentPostId) {
+    console.log(currentPostId);
+  } else {
+    console.log('No post id');
+  }
+
   const [postData, setPostData] = useState({
     creator: '',
     title: '',
@@ -15,13 +23,24 @@ function Form() {
     selectedFile: '',
   });
 
+  useEffect(() => {
+    // currentPostId =
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (currentPostId) {
+      dispatch(updatePost(currentPostId, postData));
+      return;
+    }
     dispatch(createPost(postData));
     console.log('Form Submitted!');
   };
 
   const handleCancel = () => {
+    if (currentPostId) {
+      return;
+    }
     setPostData({
       creator: '',
       title: '',

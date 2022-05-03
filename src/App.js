@@ -7,6 +7,9 @@ import Navbar from './components/Navbar';
 import Posts from './components/Posts/Posts';
 // Pages
 import HomePage from './pages/homepage';
+import CreatePostPage from './pages/createPostPage';
+import AuthenticationPage from './pages/authenticationPage';
+
 import { getPosts } from './redux/actions/posts';
 // Redux
 import store from './redux/store';
@@ -22,6 +25,9 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path='/' element={<HomePage />} />
+        <Route path='/create-post' element={<CreatePostPage />} />
+        <Route path='/create-post/:id' element={<CreatePostPage />} />
+        <Route path='/auth' element={<AuthenticationPage />} />
       </Routes>
     </div>
   );

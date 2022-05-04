@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [show, setShow] = useState(null);
   const [profile, setProfile] = useState(false);
-  const user = null;
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+
+  const logout = () => {
+    dispatch({ type: 'LOGOUT', payload: null });
+    setUser(null);
+    navigate('/auth?action=login', { replace: true });
+  };
+
+  useEffect(() => {
+    const token = user?.token;
+    // JWT
+    setUser(JSON.parse(localStorage.getItem('profile')));
+  }, []);
+
   return (
     <>
       <div className='bg-gray-200 h-full w-full'>
@@ -46,12 +62,12 @@ const Navbar = () => {
                             <div className='w-12 cursor-pointer flex text-sm border-2 border-transparent rounded focus:outline-none focus:border-white transition duration-150 ease-in-out'>
                               <img
                                 className='rounded h-10 w-10 object-cover'
-                                src='https://tuk-cdn.s3.amazonaws.com/assets/components/horizontal_navigation/hn_1.png'
+                                src={user?.result.imageUrl}
                                 alt='logo'
                               />
                             </div>
                             <p className='text-sm ml-2 cursor-pointer'>
-                              Jane Doe
+                              {user?.result.name}
                             </p>
                             <div className='sm:ml-2 text-white relative'>
                               <svg
@@ -248,31 +264,34 @@ const Navbar = () => {
                               </svg>
                               <span className='ml-2'>Help Center</span>
                             </li>
-                            <li className='cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 flex items-center focus:text-indigo-700 focus:outline-none'>
+                            <li
+                              onClick={logout}
+                              className='cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 flex items-center focus:text-indigo-700 focus:outline-none'
+                            >
                               <svg
                                 xmlns='http://www.w3.org/2000/svg'
-                                className='icon icon-tabler icon-tabler-settings'
+                                class=''
                                 width={20}
                                 height={20}
-                                viewBox='0 0 24 24'
-                                strokeWidth='1.5'
-                                stroke='currentColor'
                                 fill='none'
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
+                                viewBox='0 0 24 24'
+                                stroke='currentColor'
+                                stroke-width='1.5'
                               >
-                                <path stroke='none' d='M0 0h24v24H0z' />
-                                <path d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' />
-                                <circle cx={12} cy={12} r={3} />
+                                <path
+                                  stroke-linecap='round'
+                                  stroke-linejoin='round'
+                                  d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'
+                                />
                               </svg>
-                              <span className='ml-2'>Account Settings</span>
+                              <span className='ml-2'>Logout</span>
                             </li>
                           </ul>
                         )}
                         <div className='cursor-pointer flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out'>
                           <img
                             className='rounded-full h-10 w-10 object-cover'
-                            src='https://tuk-cdn.s3.amazonaws.com/assets/components/horizontal_navigation/hn_2.png'
+                            src={user?.result.imageUrl}
                             alt='logo'
                           />
                         </div>
@@ -487,11 +506,11 @@ const Navbar = () => {
                         <div className='flex items-center'>
                           <img
                             alt='profile-pic'
-                            src='https://tuk-cdn.s3.amazonaws.com/assets/components/boxed_layout/bl_1.png'
+                            src={user?.result.imageUrl}
                             className='w-8 h-8 rounded-md'
                           />
                           <p className=' text-gray-800 text-base leading-4 ml-2'>
-                            Jane Doe
+                            {user?.result.name}
                           </p>
                         </div>
                         <ul className='flex'>

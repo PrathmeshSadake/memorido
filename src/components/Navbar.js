@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [show, setShow] = useState(null);
   const [profile, setProfile] = useState(false);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
@@ -18,7 +19,7 @@ const Navbar = () => {
     const token = user?.token;
     // JWT
     setUser(JSON.parse(localStorage.getItem('profile')));
-  }, []);
+  }, [location]);
 
   return (
     <>

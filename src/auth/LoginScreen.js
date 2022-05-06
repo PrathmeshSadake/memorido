@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import GoogleLogin from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { loginUser } from '../redux/actions/auth';
 
 const initialState = { email: '', password: '' };
 function LoginScreen() {
   const [formData, setFormData] = useState(initialState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    dispatch(loginUser(formData, navigate('success', { replace: true })));
   };
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const googleSuccessHandler = async (res) => {
     const result = res?.profileObj;
     const token = res?.tokenId;

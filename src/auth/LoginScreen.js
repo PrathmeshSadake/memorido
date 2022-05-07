@@ -7,13 +7,14 @@ import { loginUser } from '../redux/actions/auth';
 const initialState = { email: '', password: '' };
 function LoginScreen() {
   const [formData, setFormData] = useState(initialState);
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    dispatch(loginUser(formData, navigate('success', { replace: true })));
+    dispatch(loginUser(formData, navigate('/', { replace: true })));
   };
   const googleSuccessHandler = async (res) => {
     const result = res?.profileObj;
@@ -129,13 +130,16 @@ function LoginScreen() {
                 <input
                   aria-label='enter Password'
                   role='input'
-                  type='password'
+                  type={showPassword ? 'text' : 'password'}
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
                   className='bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2'
                 />
-                <div className='absolute right-0 mt-2 mr-3 cursor-pointer'>
+                <div
+                  className='absolute right-0 mt-2 mr-3 cursor-pointer'
+                  onClick={() => setShowPassword(!showPassword)}
+                >
                   <svg
                     width={16}
                     height={16}

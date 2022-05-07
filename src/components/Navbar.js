@@ -1,6 +1,8 @@
+import jwtDecode from 'jwt-decode';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -12,14 +14,30 @@ const Navbar = () => {
   const logout = () => {
     dispatch({ type: 'LOGOUT', payload: null });
     setUser(null);
-    navigate('/auth?action=login', { replace: true });
+    // navigate('/auth?action=login', { replace: true });
+    navigate('/', { replace: true });
+  };
+
+  const getInitials = () => {
+    console.log(
+      `${user?.result.name.split(' ')[0]} + ${user?.result.name.split(' ')[1]}`
+    );
+    return `${user?.result.name.split(' ')[0]} + ${
+      user?.result.name.split(' ')[1]
+    }`;
   };
 
   useEffect(() => {
     const token = user?.token;
     // JWT
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.expiresIn * 1000 < new Date().getTime()) logout();
+    }
     setUser(JSON.parse(localStorage.getItem('profile')));
   }, [location]);
+
+  console.log(getInitials());
 
   return (
     <>
@@ -62,8 +80,12 @@ const Navbar = () => {
                           <div className='flex items-center'>
                             <div className='w-12 cursor-pointer flex text-sm border-2 border-transparent rounded focus:outline-none focus:border-white transition duration-150 ease-in-out'>
                               <img
-                                className='rounded h-10 w-10 object-cover'
-                                src={user?.result.imageUrl}
+                                className='rounded h-10 w-10 object-cover border-2 border-purple-700'
+                                src={
+                                  user?.result.imageUrl
+                                    ? user?.result.imageUrl
+                                    : `https://ui-avatars.com/api/?background=random&name=${getInitials()}`
+                                }
                                 alt='logo'
                               />
                             </div>
@@ -291,8 +313,12 @@ const Navbar = () => {
                         )}
                         <div className='cursor-pointer flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out'>
                           <img
-                            className='rounded-full h-10 w-10 object-cover'
-                            src={user?.result.imageUrl}
+                            className='rounded-full h-10 w-10 object-cover border-2 border-purple-700'
+                            src={
+                              user?.result.imageUrl
+                                ? user?.result.imageUrl
+                                : `https://ui-avatars.com/api/?background=random&name=${getInitials()}`
+                            }
                             alt='logo'
                           />
                         </div>
@@ -507,8 +533,12 @@ const Navbar = () => {
                         <div className='flex items-center'>
                           <img
                             alt='profile-pic'
-                            src={user?.result.imageUrl}
-                            className='w-8 h-8 rounded-md'
+                            src={
+                              user?.result.imageUrl
+                                ? user?.result.imageUrl
+                                : `https://ui-avatars.com/api/?background=random&name=${getInitials()}`
+                            }
+                            className='w-8 h-8 rounded-md border-2 border-purple-700'
                           />
                           <p className=' text-gray-800 text-base leading-4 ml-2'>
                             {user?.result.name}
